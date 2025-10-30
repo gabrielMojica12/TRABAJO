@@ -1,0 +1,9 @@
+class Objeto:
+    def __init__(self, nombre, material):
+        self.nombre = nombre
+        self.material = material
+        self.estado_instalacion = "No instalado"
+
+    def instalar(self):
+        self.estado_instalacion = "Instalado"
+        print(f" El objeto '{self.nombre}' ahora está {self.estado_instalacion}.")
