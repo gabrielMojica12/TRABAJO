@@ -1,0 +1,111 @@
+# main.py
+
+import random
+from carro import Carro
+from trabajador import Trabajador
+from maquina import Maquina
+from objeto import Objeto
+
+# Datos base
+
+
+MARCAS = ["Toyota", "Ford", "Chevrolet", "Hyundai", "Nissan", "Kia"]
+MODELOS = ["Corolla", "Focus", "Spark", "Tucson", "Altima", "Rio"]
+ANIOS = list(range(2018, 2026))
+
+NOMBRES = ["Carlos", "Juan", "Ana", "Pedro", "Luisa", "María", "Esteban", "Camila"]
+APELLIDOS = ["Pérez", "Gómez", "Rodríguez", "López", "Martínez", "Torres"]
+
+ESPECIALIDADES = ["Operador Robótico", "Ingeniero Mecánico", "Supervisor de Línea", "Técnico en Ensamblaje"]
+
+carros_ensamblados = []
+
+
+
+# Funciones del programa
+
+
+def generar_carro():
+    marca = random.choice(MARCAS)
+    modelo = random.choice(MODELOS)
+    anio = random.choice(ANIOS)
+    return Carro(marca, modelo, anio)
+
+
+def generar_trabajador():
+    nombre = random.choice(NOMBRES)
+    apellido = random.choice(APELLIDOS)
+    id_trabajador = random.randint(100, 999)
+    especialidad = random.choice(ESPECIALIDADES)
+    return Trabajador(f"{nombre} {apellido}", id_trabajador, especialidad)
+
+
+def ensamblar_carro():
+    print("\n Creando nuevo proceso de ensamblaje...")
+
+    carro = generar_carro()
+    trabajador = generar_trabajador()
+    maquina = Maquina(f"MX-{random.randint(1, 20)}", "Brazo Robótico")
+
+    carro.mostrar_info()
+    trabajador.controlar_maquina(maquina)
+
+    while True:
+        nombre_obj = input("\n Ingresa el nombre del componente a instalar (o 'fin' para terminar): ").strip()
+        if nombre_obj.lower() == "fin":
+            break
+
+        material_obj = input("Material del componente: ").strip()
+        objeto = Objeto(nombre_obj, material_obj)
+        maquina.instalar_objeto(carro, objeto)
+
+    carro.set_estado("Completamente ensamblado")
+    print(f"\nCarro ensamblado exitosamente por {trabajador.nombre}")
+    carro.mostrar_info()
+
+    carros_ensamblados.append(carro)
+
+
+def consultar_carros():
+    if not carros_ensamblados:
+        print("\n📭 No hay carros ensamblados todavía.")
+        return
+
+    print("\n=== LISTA DE CARROS ENSAMBLADOS ===")
+    for i, carro in enumerate(carros_ensamblados, start=1):
+        print(f"\n#{i} - {carro.marca} {carro.modelo} ({carro.anio})")
+        print(f"Estado: {carro.estado_ensamblaje}")
+        if carro.componentes_instalados:
+            print("Componentes instalados:")
+            for nombre, material in carro.componentes_instalados:
+                print(f"   Modificación: {nombre}  Material: {material}")
+        else:
+            print("  (Sin modificaciones registradas)")
+
+
+
+# Menú principal
+
+
+def main():
+    while True:
+        print("\n===== SISTEMA DE ENSAMBLAJE AUTOMATIZADO =====")
+        print("1. Ensamblar un nuevo carro")
+        print("2. Consultar carros ensamblados")
+        print("3. Salir")
+
+        opcion = input("Selecciona una opción: ").strip()
+
+        if opcion == "1":
+            ensamblar_carro()
+        elif opcion == "2":
+            consultar_carros()
+        elif opcion == "3":
+            print(" Saliendo del sistema...")
+            break
+        else:
+            print(" Opción inválida. Intenta de nuevo.")
+
+
+if __name__ == "__main__":
+    main()
